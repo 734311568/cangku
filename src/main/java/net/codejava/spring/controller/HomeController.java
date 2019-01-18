@@ -15,25 +15,59 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 
-	@RequestMapping(value="/")
-	public ModelAndView goHome(HttpServletResponse response) throws IOException{
+	@RequestMapping(value = "/")
+	public ModelAndView goHome(HttpServletResponse response) throws IOException {
 		return new ModelAndView("home");
 	}
-	
-	@RequestMapping(value="/viewXSLT")
+
+	@RequestMapping(value = "/viewXSLT")
 	public ModelAndView viewXSLT(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+		HttpServletResponse response) throws IOException {
 		// builds absolute path of the XML file
 		String xmlFile = "resources/citizens.xml";
 		String contextPath = request.getServletContext().getRealPath("");
 		String xmlFilePath = contextPath + File.separator + xmlFile;
-		
-		Source source = new StreamSource(new File(xmlFilePath)); 
+
+		Source source = new StreamSource(new File(xmlFilePath));
 
 		// adds the XML source file to the model so the XsltView can detect
 		ModelAndView model = new ModelAndView("XSLTView");
 		model.addObject("xmlSource", source);
-		
+
+		return model;
+	}
+
+	@RequestMapping(value = "/viewXSLTtry")
+	public ModelAndView viewXSLTtry(HttpServletRequest request,
+		HttpServletResponse response) throws IOException {
+		// builds absolute path of the XML file
+		String xmlFile = "resources/myCDcollection_1.xml";
+		String contextPath = request.getServletContext().getRealPath("");
+		String xmlFilePath = contextPath + File.separator + xmlFile;
+
+		Source source = new StreamSource(new File(xmlFilePath));
+
+		// adds the XML source file to the model so the XsltView can detect
+		ModelAndView model = new ModelAndView("XSLTViewTry");
+		model.addObject("xmlSource", source);
+
+		return model;
+	}
+
+	@RequestMapping(value = "/viewXSLTAccessLog")
+	public ModelAndView viewXSLTAccessLog(HttpServletRequest request,
+		HttpServletResponse response) throws IOException {
+		// builds absolute path of the XML file
+		String xmlFile = "resources/accessLog.xml";
+		String contextPath = request.getServletContext().getRealPath("");
+		String xmlFilePath = contextPath + File.separator + xmlFile;
+
+		Source source = new StreamSource(new File(xmlFilePath));
+
+		// adds the XML source file to the model so the XsltView can detect
+		ModelAndView model = new ModelAndView("XSLTViewAccessLog");
+		model.addObject("xmlSource", source);
+
 		return model;
 	}
 }

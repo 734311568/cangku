@@ -6,6 +6,7 @@
         <lastname>Johnson</lastname>
         <role>Manager</role>
         <salary>12000</salary>
+	<redan>redan</redan>
     </citizen>
     <citizen>
         <ssn>Z446T</ssn>
