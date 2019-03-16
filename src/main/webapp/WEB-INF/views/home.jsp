@@ -19,6 +19,9 @@
 			<p>
 				<b><a href="viewXSLTAccessLog">AccessLogSeacrh</a></b>
 			</p>
+                        <p>
+				<b><a href="viewXSL">getSXLView</a></b>
+			</p>
 		</div>
 	</body>
 </html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="B.xsl"?>
+<document>
+    <comments>
+        <id>f27427d5-b824-4c8a-a869-1bfe4c635a3a</id>
+        <content>這是一篇好文章阿</content>
+        <who>
+            <nickname>pc</nickname>
+            <id>814ae3e4-cacd-4202-b3a6-4f9b429ce361</id>
+        </who>
+	</comments>
+	<comments>
+        <id>7bbd4930-9b17-44f9-9faa-5e8c55e6f06e</id>
+	
+        <content>家惠什麼時候要開始減肥呀</content>
+        <who>
+            <nickname>pc</nickname>
+            <id>814ae3e4-cacd-4202-b3a6-4f9b429ce361</id>
+        </who>
+    </comments>
+    <emotions>0</emotions>
+    <postedAt>2014-02-11T00:00:00+08:00</postedAt>
+    <nickname>redan</nickname>
+    <id>6de8ce18-acdd-44e7-87a0-c60cb36fd063</id>
+    <id>e54d02df-ffd3-415a-97e9-1b75b9e561b8</id>
+    <content>this is content 這是一篇文章</content>
+</document>

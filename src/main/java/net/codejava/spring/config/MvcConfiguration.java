@@ -31,6 +31,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 		//可設定多個ViewName
 		xsltResolover.setViewNames(
 			new String[]{
+                                "B",
 				"XSLTViewTry",
 				"XSLTView",
 				"XSLTViewAccessLog"
