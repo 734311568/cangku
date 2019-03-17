@@ -203,45 +203,44 @@ public class HomeController {
         public void viewFor(HttpServletRequest request,
                 HttpServletResponse response) throws IOException, ParserConfigurationException, TransformerException {
 
-                //鍒涘缓瑙ｆ瀽DOM瑙ｆ瀽鍣?
+             
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document doc = builder.newDocument();
-                //鏍瑰厓绱?
+             
                 Element documentElement = doc.createElement("document");
                 doc.appendChild(documentElement);
-                //鍝嶅簲鏁版嵁
+               
                 CloseableHttpResponse response1 = HttpClients.createDefault().execute(new HttpGet("https://redan-api.herokuapp.com/story/"));
-                //杩斿洖鑾峰彇瀹炰綋
+             
                 HttpEntity entity = response1.getEntity();
                 if (entity != null) {
 
                         String str = EntityUtils.toString(entity, "UTF-8");
-                        //鎶婅繖涓瓧绗︿覆杞垚json鏁扮粍
+                        //获取的最外层的json数组
                         JSONArray jsonArray = new JSONObject(str).getJSONArray("result");
-                        //鎷垮埌鏈?澶栨垚鐨勪釜瀵硅薄
+
                         JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        //閫氳繃绗竴涓璞℃嬁鍒版墍鏈夌殑鍊?
+
                         Iterator<String> keys = jsonObject.keys();
 
                         for (int i = 0; i < jsonObject.length(); i++) {
-                                //鎷垮埌result杩欏眰鐨勬墍鏈塳ey
+                                //拿到这第一层的所有的节点
                                 String key1 = keys.next();
-                                //閫氳繃key鎷垮埌鍊?,鐒堕拡瀵瑰?煎啀鏉ュ垽鏂竴涓嬫槸鏁扮粍杩樻槸瀵硅薄鎴栬?呮槸鏂囨湰
-                                String string1 = jsonObject.get(key1).toString();
-                                //鎵撳嵃绗竴灞俴ey
-
+                                
+                                String string1 = jsonObject.getString(key1);
+                                //创建节点
                                 Element key1eElement = doc.createElement(key1);
 
                                 if (!string1.endsWith("}") && !string1.endsWith("]")) {
-                                        System.out.println("鏄枃鏈?" + string1 + "     " + key1);
+
                                         key1eElement.setTextContent(string1);
                                 }
                                 documentElement.appendChild(key1eElement);
-                                //鏄痡son鏁扮粍鐨勫璞℃椂鍊?
+                                //是json 对象时候
                                 if (string1.startsWith("{")) {
-                                        JSONObject jsono2 = jsonObject.getJSONObject(key1);//鎷垮埌鎵?鏈夌殑鍊?
-                                        // Iterator<String> keys2 = jsono2.keys();//鎵?鏈夌殑閿?
+                                        JSONObject jsono2 = jsonObject.getJSONObject(key1);
+
                                         Iterator<String> keys2 = jsono2.keys();
                                         for (int j = 0; j < jsono2.length(); j++) {
                                                 String next2 = keys2.next();
@@ -253,7 +252,7 @@ public class HomeController {
                                         }
 
                                 }
-                                //鏄痡son鏁扮粍鐨勬儏鍐典笅
+                                //是数组的情况
                                 if (string1.startsWith("[")) {
 
                                         JSONArray json3 = jsonObject.getJSONArray(key1);//鎵?鏈夊??
@@ -275,14 +274,12 @@ public class HomeController {
                                                                 Iterator<String> keys4 = json5.keys();
                                                                 for (int r = 0; r < json5.length(); r++) {
                                                                         String next5 = keys4.next();
-                                                                        //   String key6 = keys4.next();
-                                                                        String stringValue2 = json5.getString(next5);
 
-                                                                        System.out.println("key6" + next5 + "stringValue2" + stringValue2);
+                                                                        String stringValue2 = json5.getString(next5);
 
                                                                         Element key6Element = doc.createElement(next5);
                                                                         key6Element.setTextContent(stringValue2);
-                                                                        // key6Element.appendChild(key6Element);
+
                                                                         key5Element.appendChild(key6Element);
 
                                                                 }
@@ -305,11 +302,112 @@ public class HomeController {
 
         }
 
+        @RequestMapping(value = "/getView")
+        @ResponseBody
+        public void getView(HttpServletRequest request,
+                HttpServletResponse response) throws IOException, ParserConfigurationException, TransformerException {
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.newDocument();
+
+                //创建的根元素
+                Element documentElement = doc.createElement("document");
+                doc.appendChild(documentElement);
+                //创建客户端
+
+                CloseableHttpResponse response1 = HttpClients.createDefault().execute(new HttpGet("https://redan-api.herokuapp.com/story/"));
+                //返回字符串实体
+
+                HttpEntity entity1 = response1.getEntity();
+                if (entity1 != null) {
+                        //给返回的实体设置编码
+                        String retSrc = EntityUtils.toString(entity1, "UTF-8");
+                        //获得最外层的元素的是个数组
+                        JSONArray storyList = new JSONObject(retSrc).getJSONArray("result");
+
+                        // 那么遍历里面的元素取出所有的元素
+                        for (int i = 0; i < storyList.length(); i++) {
+                                //拿到json 每个数组元素判断json数组判断元素是否对象还是数组
+                                JSONObject jsonObject = storyList.getJSONObject(i);
+
+                                Iterator<String> next1 = jsonObject.keys();
+
+                                while (next1.hasNext()) {
+                                        String next2 = next1.next();
+                                        //文本的情况下
+                                        Element documentNext2 = doc.createElement(next2);
+                                        String teString = jsonObject.get(next2).toString();
+                                        if (!(next2.equals("author") || next2.equals("comments"))) {
+
+                                                documentNext2.setTextContent(teString);
+
+                                        }
+                                        documentElement.appendChild(documentNext2);
+                                        //在comments数组中
+                                        if (next2.equals("comments")) {
+                                                JSONArray jsonArray = jsonObject.getJSONArray(next2);
+                                                //创建标签节点
+
+                                                for (int j = 0; j < jsonArray.length(); j++) {
+                                                        JSONObject jsonObject3 = jsonArray.getJSONObject(j);
+                                                        Iterator<String> next3 = jsonObject3.keys();
+                                                        while (next3.hasNext()) {
+                                                                String next4 = next3.next();
+                                                                Element elementNext4 = doc.createElement(next4);
+                                                                if (!next4.equals("who")) {
+                                                                        String vaString = jsonObject3.getString(next4);
+                                                                        elementNext4.setTextContent(vaString);
+
+                                                                }
+                                                                if (next4.equals("who")) {
+                                                                        JSONObject jsonObject4 = jsonObject3.getJSONObject(next4);
+                                                                        Iterator<String> next5 = jsonObject4.keys();
+                                                                        while (next5.hasNext()) {
+                                                                                String next6 = next5.next();
+                                                                                String vaString = jsonObject4.getString(next6);
+                                                                                Element documentNext6 = doc.createElement(next6);
+                                                                                documentNext6.setTextContent(vaString);
+
+                                                                                elementNext4.appendChild(documentNext6);
+                                                                        }
+                                                                }
+                                                                documentNext2.appendChild(elementNext4);
+
+                                                        }
+
+                                                }
+
+                                        }
+                                        if (next2.equals("author")) {
+                                                JSONObject jsonObject5 = jsonObject.getJSONObject(next2);
+                                                Iterator<String> next7 = jsonObject5.keys();
+                                                while (next7.hasNext()) {
+                                                        String next8 = next7.next();
+                                                        String vaString2 = jsonObject5.getString(next8);
+                                                        //创建节点标签
+                                                        Element documentNext8 = doc.createElement(next8);
+                                                        documentNext8.setTextContent(vaString2);
+
+                                                        documentNext2.appendChild(documentNext8);
+                                                }
+
+                                        }
+
+                                }
+
+                        }
+
+                }
+                //更新到本项目
+                TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(response.getOutputStream()));
+
+        }
+
         @RequestMapping(value = "/viewXSL")
 
         public ModelAndView getXsl(HttpServletRequest request,
                 HttpServletResponse response) throws IOException, ParserConfigurationException, TransformerException {
-                 // builds absolute path of the XML file
+                // builds absolute path of the XML file
                 String xmlFile = "resources/B.xml";
                 String contextPath = request.getServletContext().getRealPath("");
                 String xmlFilePath = contextPath + File.separator + xmlFile;
@@ -321,7 +419,6 @@ public class HomeController {
                 model.addObject("xmlSource", source);
 
                 return model;
-                
 
         }
 }
